@@ -37,7 +37,7 @@ final class Installer {
 		check_admin_referer( self::ACTION . '_' . $slug );
 
 		$m = Catalog::get( $slug );
-		if ( ! $m || Catalog::installed( $m['file'] ) ) {
+		if ( ! $m || Catalog::install_state( $m ) ) {
 			self::back( array( 'bombora-msg' => 'invalid' ) );
 		}
 

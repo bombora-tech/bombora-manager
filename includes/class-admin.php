@@ -59,12 +59,14 @@ final class Admin {
 			'norelease' => array( 'warning', __( 'This module has no published release yet.', 'bombora-manager' ) ),
 			'invalid'   => array( 'error', __( 'Unknown or already installed module.', 'bombora-manager' ) ),
 			'error'     => array( 'error', __( 'Installation failed.', 'bombora-manager' ) ),
+			'migrated'      => array( 'success', __( 'Plugin converted to the new Bombora folder. Settings and data are unchanged.', 'bombora-manager' ) ),
+			'migrate-error' => array( 'error', __( 'Conversion failed.', 'bombora-manager' ) ),
 		);
 		if ( ! isset( $map[ $msg ] ) ) {
 			return;
 		}
 		$text = $map[ $msg ][1];
-		if ( 'error' === $msg ) {
+		if ( 'error' === $msg || 'migrate-error' === $msg ) {
 			$detail = get_transient( 'bombora_err_' . get_current_user_id() );
 			if ( is_string( $detail ) && '' !== $detail ) {
 				$text .= ' ' . $detail;
@@ -116,11 +118,15 @@ final class Admin {
 	 * @param array<string,string> $m Modul.
 	 */
 	private static function card( string $slug, array $m, bool $can_mods ): void {
-		$installed = Catalog::installed( $m['file'] );
-		$active    = $installed && is_plugin_active( $m['file'] );
+		$st        = Catalog::install_state( $m );
+		$file      = $st ? $st['file'] : $m['file'];
+		$legacy    = $st && $st['legacy'];
+		$installed = $st ? $st['data'] : null;
+		$active    = $installed && is_plugin_active( $file );
+		$pending   = ! empty( $m['legacy'] ) && ( null !== Migrator::pending( $slug ) || ( ! $legacy && $installed && Catalog::legacy_present( $m ) ) );
 		$rel       = GitHub::latest( $m ); // Na této stránce smí dotaz na GitHub (cache 6 h).
 		$latest    = $rel ? $rel['version'] : '';
-		$has_upd   = $installed && $latest && version_compare( $latest, (string) $installed['Version'], '>' );
+		$has_upd   = $installed && ! $legacy && $latest && version_compare( $latest, (string) $installed['Version'], '>' );
 		$err       = GitHub::last_error( $m['repo'] );
 
 		if ( $active ) {
@@ -140,6 +146,14 @@ final class Admin {
 				</div>
 			</div>
 			<p class="bombora-card__desc"><?php echo esc_html( $m['desc'] ); ?></p>
+			<?php if ( $legacy ) : ?>
+				<p class="bombora-card__note">
+					<?php
+					/* translators: 1: old folder, 2: new folder */
+					echo esc_html( sprintf( __( 'Installed in the old folder %1$s. The conversion moves it to %2$s – settings and data stay.', 'bombora-manager' ), dirname( $file ), dirname( $m['file'] ) ) );
+					?>
+				</p>
+			<?php endif; ?>
 			<dl class="bombora-meta">
 				<div><dt><?php esc_html_e( 'Installed', 'bombora-manager' ); ?></dt><dd><?php echo $installed ? esc_html( (string) $installed['Version'] ) : '—'; ?></dd></div>
 				<div><dt><?php esc_html_e( 'Latest', 'bombora-manager' ); ?></dt><dd>
@@ -171,10 +185,26 @@ final class Admin {
 					</a>
 				<?php endif; ?>
 
+				<?php if ( $pending && Migrator::allowed() ) : ?>
+					<a class="button bombora-btn-update" href="<?php echo esc_url( Migrator::finish_url( $slug ) ); ?>"><?php esc_html_e( 'Finish conversion', 'bombora-manager' ); ?></a>
+				<?php elseif ( $legacy && $latest && Migrator::allowed() ) : ?>
+					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+						<input type="hidden" name="action" value="<?php echo esc_attr( Migrator::START ); ?>">
+						<input type="hidden" name="module" value="<?php echo esc_attr( $slug ); ?>">
+						<?php wp_nonce_field( Migrator::START . '_' . $slug ); ?>
+						<button type="submit" class="button bombora-btn-update">
+							<?php
+							/* translators: %s: version */
+							echo esc_html( sprintf( __( 'Convert and update to %s', 'bombora-manager' ), $latest ) );
+							?>
+						</button>
+					</form>
+				<?php endif; ?>
+
 				<?php if ( $installed && ! $active && current_user_can( 'activate_plugins' ) ) : ?>
-					<a class="button button-primary" href="<?php echo esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . rawurlencode( $m['file'] ) ), 'activate-plugin_' . $m['file'] ) ); ?>"><?php esc_html_e( 'Activate', 'bombora-manager' ); ?></a>
+					<a class="button button-primary" href="<?php echo esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . rawurlencode( $file ) ), 'activate-plugin_' . $file ) ); ?>"><?php esc_html_e( 'Activate', 'bombora-manager' ); ?></a>
 				<?php elseif ( $active && empty( $m['core'] ) && current_user_can( 'activate_plugins' ) ) : ?>
-					<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'plugins.php?action=deactivate&plugin=' . rawurlencode( $m['file'] ) ), 'deactivate-plugin_' . $m['file'] ) ); ?>"><?php esc_html_e( 'Deactivate', 'bombora-manager' ); ?></a>
+					<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'plugins.php?action=deactivate&plugin=' . rawurlencode( $file ) ), 'deactivate-plugin_' . $file ) ); ?>"><?php esc_html_e( 'Deactivate', 'bombora-manager' ); ?></a>
 				<?php endif; ?>
 
 				<?php if ( ! $installed && $can_mods && current_user_can( 'install_plugins' ) ) : ?>

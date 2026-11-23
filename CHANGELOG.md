@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.0] - 2026-11-23
+
+### Přidáno
+- Modul **Bombora Read More Toggle** (repo `bombora-read-more-toogle`, tag `[read]…[/read]`).
+- **Převod do nové složky**: Smart Search (`zg-smart-search` → `bombora-smart-search`), Wine Nutrition (`wine-nutrition-manager` → `bombora-wine-nutrition`) a Read More Toggle (`read-more-toggle` → `bombora-read-more-toggle`). Tlačítko „Převést a aktualizovat na X“ ve dvou krocích: ověřený balíček → instalace nové složky → tichá deaktivace staré → (nový požadavek) aktivace nové → smazání staré složky bez `uninstall.php`, takže data a nastavení zůstanou. Při chybě aktivace se vrátí stará verze. Nedokončený převod jde dokončit tlačítkem „Dokončit převod“.
+- Pojistka proti dvojímu načtení Manageru (např. druhá kopie ve složce `bombora-manager-main`).
+
+### Změněno
+- Všechny moduly se jmenují „Bombora …“ a jejich složky začínají `bombora-` (v adresáři pluginů jsou pod sebou).
+- Stará složka modulu se neaktualizuje standardní cestou WordPressu – jen převodem.
+
 ## [1.0.1] - 2026-11-23
 
 ### Opraveno

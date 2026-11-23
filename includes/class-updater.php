@@ -29,6 +29,10 @@ final class Updater {
 			return $transient;
 		}
 		foreach ( Catalog::all() as $slug => $m ) {
+			// Stará složka (před přejmenováním) se neaktualizuje standardní cestou – převádí ji Manager (Migrator).
+			if ( ! empty( $m['legacy'] ) ) {
+				unset( $transient->response[ $m['legacy'] ], $transient->no_update[ $m['legacy'] ] );
+			}
 			$installed = Catalog::installed( $m['file'] );
 			if ( ! $installed ) {
 				continue;

@@ -150,6 +150,9 @@ final class Admin {
 						esc_html_e( 'not released yet', 'bombora-manager' );
 					} else {
 						echo '—';
+						if ( '' !== $err ) {
+							echo '<br><small class="bombora-err">' . esc_html( $err ) . '</small>';
+						}
 					}
 					?>
 				</dd></div>

@@ -88,7 +88,9 @@ final class Updater {
 			'download_link' => $rel['zip'],
 			'sections'      => array(
 				'description' => esc_html( $m['desc'] ),
-				'changelog'   => '<pre>' . esc_html( $rel['notes'] ) . '</pre>',
+				'changelog'   => '' !== $rel['notes']
+					? '<pre>' . esc_html( $rel['notes'] ) . '</pre>'
+					: ( '' !== $rel['html_url'] ? '<p><a href="' . esc_url( $rel['html_url'] ) . '" target="_blank" rel="noopener noreferrer">GitHub release</a></p>' : '' ),
 			),
 		);
 	}

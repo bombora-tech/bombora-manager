@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 final class GitHub {
 
 	private const TTL       = 6 * HOUR_IN_SECONDS;
-	private const ERROR_TTL = HOUR_IN_SECONDS;
+	private const ERROR_TTL = 15 * MINUTE_IN_SECONDS;
 	private const MAX_ZIP   = 20971520; // 20 MB.
 	private const HOSTS     = array( 'api.github.com', 'github.com', 'objects.githubusercontent.com', 'release-assets.githubusercontent.com', 'github-releases.githubusercontent.com' );
 
@@ -90,32 +90,52 @@ final class GitHub {
 			return null;
 		};
 
+		$info = self::has_token() ? self::latest_api( $module ) : null;
+		if ( ! is_array( $info ) ) {
+			// Bez tokenu (nebo při chybě API): webová přesměrování github.com – nepodléhají limitu 60 dotazů/h na IP sdílené více weby.
+			$info = self::latest_web( $module );
+		}
+		if ( is_string( $info ) ) {
+			return $fail( $info );
+		}
+
+		set_site_transient( $key, $info, self::TTL );
+		delete_site_transient( $key . '_err' );
+		return $info;
+	}
+
+	/**
+	 * Poslední release přes REST API (jen s tokenem). Vrací pole, nebo text chyby.
+	 *
+	 * @param array<string,string> $module Položka katalogu.
+	 * @return array<string,string>|string
+	 */
+	private static function latest_api( array $module ) {
 		$resp = wp_remote_get(
-			'https://api.github.com/repos/' . $repo . '/releases/latest',
+			'https://api.github.com/repos/' . $module['repo'] . '/releases/latest',
 			array(
 				'timeout' => 15,
 				'headers' => self::headers( 'application/vnd.github+json' ),
 			)
 		);
 		if ( is_wp_error( $resp ) ) {
-			return $fail( $resp->get_error_message() );
+			return $resp->get_error_message();
 		}
 		$code = (int) wp_remote_retrieve_response_code( $resp );
 		if ( 404 === $code ) {
-			return $fail( 'no-release' );
+			return 'no-release';
 		}
 		if ( 200 !== $code ) {
-			return $fail( sprintf( 'GitHub API HTTP %d', $code ) );
+			return sprintf( 'GitHub API HTTP %d', $code );
 		}
 		$data = json_decode( (string) wp_remote_retrieve_body( $resp ), true );
 		if ( ! is_array( $data ) || ! empty( $data['draft'] ) || ! empty( $data['prerelease'] ) ) {
-			return $fail( 'Invalid release data' );
+			return 'Invalid release data';
 		}
 		$version = ltrim( (string) ( $data['tag_name'] ?? '' ), 'vV' );
 		if ( ! preg_match( '/^\d+\.\d+\.\d+$/', $version ) ) {
-			return $fail( 'Invalid version tag' );
+			return 'Invalid version tag';
 		}
-
 		$zip = '';
 		$sha = '';
 		foreach ( (array) ( $data['assets'] ?? array() ) as $asset ) {
@@ -131,10 +151,9 @@ final class GitHub {
 			}
 		}
 		if ( '' === $zip || '' === $sha ) {
-			return $fail( 'Release is missing ' . $module['asset'] . ' or its .sha256' );
+			return 'Release is missing ' . $module['asset'] . ' or its .sha256';
 		}
-
-		$info = array(
+		return array(
 			'version'   => $version,
 			'zip'       => $zip,
 			'sha'       => $sha,
@@ -142,9 +161,55 @@ final class GitHub {
 			'html_url'  => self::host_allowed( (string) ( $data['html_url'] ?? '' ) ) ? (string) $data['html_url'] : '',
 			'published' => (string) ( $data['published_at'] ?? '' ),
 		);
-		set_site_transient( $key, $info, self::TTL );
-		delete_site_transient( $key . '_err' );
-		return $info;
+	}
+
+	/**
+	 * Poslední release z webu github.com: /releases/latest přesměruje na /releases/tag/vX.Y.Z.
+	 * GitHub sám vrací jen release, které nejsou draft ani prerelease. Assety se stahují
+	 * z /releases/download/vX.Y.Z/<asset> (pevná cesta z katalogu, ověření SHA-256 beze změny).
+	 *
+	 * @param array<string,string> $module Položka katalogu.
+	 * @return array<string,string>|string
+	 */
+	private static function latest_web( array $module ) {
+		$base = 'https://github.com/' . $module['repo'];
+		$resp = wp_remote_head(
+			$base . '/releases/latest',
+			array(
+				'timeout'     => 15,
+				'redirection' => 0,
+				'headers'     => array( 'User-Agent' => 'Bombora-Manager/' . BOMBORA_MANAGER_VERSION ),
+			)
+		);
+		if ( is_wp_error( $resp ) ) {
+			return $resp->get_error_message();
+		}
+		$code     = (int) wp_remote_retrieve_response_code( $resp );
+		$location = (string) wp_remote_retrieve_header( $resp, 'location' );
+		if ( 404 === $code ) {
+			return 'no-release';
+		}
+		if ( $code < 300 || $code >= 400 || '' === $location ) {
+			return sprintf( 'GitHub HTTP %d', $code );
+		}
+		$prefix = $base . '/releases/tag/';
+		if ( 0 !== strpos( $location, $prefix ) ) {
+			// Repo bez releasu přesměruje na /releases.
+			return 'no-release';
+		}
+		$tag = rawurldecode( substr( $location, strlen( $prefix ) ) );
+		if ( ! preg_match( '/^v?(\d+\.\d+\.\d+)$/', $tag, $m ) ) {
+			return 'Invalid version tag';
+		}
+		$dl = $base . '/releases/download/' . rawurlencode( $tag ) . '/';
+		return array(
+			'version'   => $m[1],
+			'zip'       => $dl . rawurlencode( $module['asset'] ),
+			'sha'       => $dl . rawurlencode( $module['asset'] . '.sha256' ),
+			'notes'     => '',
+			'html_url'  => $prefix . rawurlencode( $tag ),
+			'published' => '',
+		);
 	}
 
 	/**

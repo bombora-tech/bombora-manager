@@ -3,7 +3,7 @@
  * Plugin Name:       Bombora Manager
  * Plugin URI:        https://github.com/bombora-tech/bombora-manager
  * Description:       Správa všech pluginů Bombora na jednom místě: přehled modulů, instalace, aktivace a bezpečné automatické aktualizace z GitHubu (ověřené SHA-256).
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.5
  * Requires PHP:      8.0
  * Author:            Bombora group s.r.o.
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'BOMBORA_MANAGER_VERSION', '1.0.0' );
+define( 'BOMBORA_MANAGER_VERSION', '1.0.1' );
 define( 'BOMBORA_MANAGER_FILE', __FILE__ );
 define( 'BOMBORA_MANAGER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BOMBORA_MANAGER_URL', plugin_dir_url( __FILE__ ) );

@@ -17,7 +17,7 @@ Správa všech pluginů Bombora group s.r.o. na jednom místě (podobně jako WP
 ## Vydání nové verze (libovolného modulu)
 1. Zvýšit verzi v hlavičce pluginu (a v konstantě verze).
 2. Doplnit `CHANGELOG.md`.
-3. `git tag vX.Y.Z && git push origin main --tags` → GitHub Action vytvoří Release s `<slozka>.zip` + `.sha256`.
+3. Push do `main` → GitHub Action sama vytvoří Release `vX.Y.Z` s `<slozka>.zip` + `.sha256` (jen pokud ta verze ještě nebyla vydána).
 
 Release musí obsahovat asset pojmenovaný přesně podle tabulky (`<slozka>.zip` a `<slozka>.zip.sha256`) a ZIP musí obsahovat jedinou složku pluginu – jinak ho Manager odmítne.
 

@@ -1,0 +1,40 @@
+# Při pushnutí tagu vX.Y.Z sestaví ZIP + SHA-256 a připojí je k GitHub Release.
+# Weby si pak aktualizaci stáhnou samy (Bombora → Moduly).
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: none
+
+      - name: Ověřit verzi tagu
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          VER="$(grep -m1 -E '^\s*\*\s*Version:' bombora-manager.php | sed -E 's/.*Version:\s*//; s/\s+$//')"
+          if [ "$TAG" != "$VER" ]; then echo "Tag $TAG ≠ Version $VER"; exit 1; fi
+
+      - name: Build
+        run: bash build.sh
+
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NOTES="$(awk "/^## \\[${GITHUB_REF_NAME#v}\\]/{f=1;next}/^## \\[/{f=0}f" CHANGELOG.md)"
+          gh release create "$GITHUB_REF_NAME" dist/bombora-manager.zip dist/bombora-manager.zip.sha256 \
+            --title "Bombora Manager $GITHUB_REF_NAME" --notes "$NOTES" || \
+          gh release upload "$GITHUB_REF_NAME" dist/bombora-manager.zip dist/bombora-manager.zip.sha256 --clobber

@@ -1,0 +1,47 @@
+<?php
+/**
+ * Plugin Name:       Bombora Manager
+ * Plugin URI:        https://github.com/bombora-tech/bombora-manager
+ * Description:       Správa všech pluginů Bombora na jednom místě: přehled modulů, instalace, aktivace a bezpečné automatické aktualizace z GitHubu (ověřené SHA-256).
+ * Version:           1.0.0
+ * Requires at least: 6.5
+ * Requires PHP:      8.0
+ * Author:            Bombora group s.r.o.
+ * License:           GPL-2.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       bombora-manager
+ * Domain Path:       /languages
+ * Update URI:        https://github.com/bombora-tech/bombora-manager
+ *
+ * @package Bombora\Manager
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+define( 'BOMBORA_MANAGER_VERSION', '1.0.0' );
+define( 'BOMBORA_MANAGER_FILE', __FILE__ );
+define( 'BOMBORA_MANAGER_DIR', plugin_dir_path( __FILE__ ) );
+define( 'BOMBORA_MANAGER_URL', plugin_dir_url( __FILE__ ) );
+define( 'BOMBORA_MANAGER_BASENAME', plugin_basename( __FILE__ ) );
+
+require_once BOMBORA_MANAGER_DIR . 'includes/class-catalog.php';
+require_once BOMBORA_MANAGER_DIR . 'includes/class-github.php';
+require_once BOMBORA_MANAGER_DIR . 'includes/class-updater.php';
+require_once BOMBORA_MANAGER_DIR . 'includes/class-installer.php';
+require_once BOMBORA_MANAGER_DIR . 'includes/class-admin.php';
+
+add_action(
+	'init',
+	static function () {
+		load_plugin_textdomain( 'bombora-manager', false, dirname( BOMBORA_MANAGER_BASENAME ) . '/languages' );
+	},
+	0
+);
+
+// Aktualizace musí běžet i při WP-Cron a WP-CLI, ne jen v administraci.
+Bombora\Manager\Updater::init();
+
+if ( is_admin() ) {
+	Bombora\Manager\Installer::init();
+	Bombora\Manager\Admin::init();
+}

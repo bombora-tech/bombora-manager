@@ -1,0 +1,13 @@
+.git
+.github
+.gitignore
+.distignore
+dist
+build
+node_modules
+build.sh
+README.md
+CHANGELOG.md
+*.zip
+*.sha256
+.DS_Store

@@ -1,0 +1,32 @@
+# Bombora Manager
+
+Správa všech pluginů Bombora group s.r.o. na jednom místě (podobně jako WPify).
+
+| Modul | Složka pluginu | Repozitář |
+|---|---|---|
+| Bombora Manager | `bombora-manager` | `bombora-tech/bombora-manager` |
+| Pop-up košík | `bombora-cart-popup` | `bombora-tech/bombora-cart-popup` |
+| Smart Search | `zg-smart-search` | `bombora-tech/bombora-smart-search` |
+| Wine Nutrition | `wine-nutrition-manager` | `bombora-tech/bombora-wine-nutrition` |
+
+## Jak to funguje
+- **Bombora → Moduly**: instalace, aktivace, nastavení a aktualizace modulů.
+- Aktualizace se objeví i v běžném *Nástěnka → Aktualizace* (kontrola každých 6 h, ručně tlačítkem „Zkontrolovat aktualizace“).
+- Na webech se nic nekonfiguruje – repozitáře jsou veřejné, zdroje jsou pevně v kódu.
+
+## Vydání nové verze (libovolného modulu)
+1. Zvýšit verzi v hlavičce pluginu (a v konstantě verze).
+2. Doplnit `CHANGELOG.md`.
+3. `git tag vX.Y.Z && git push origin main --tags` → GitHub Action vytvoří Release s `<slozka>.zip` + `.sha256`.
+
+Release musí obsahovat asset pojmenovaný přesně podle tabulky (`<slozka>.zip` a `<slozka>.zip.sha256`) a ZIP musí obsahovat jedinou složku pluginu – jinak ho Manager odmítne.
+
+## Přidání nového modulu
+Doplnit položku do `includes/class-catalog.php` (název, soubor, repo, asset, stránka nastavení) a vydat novou verzi Manageru.
+
+## Bezpečnost
+- Zdroje instalace pevně v kódu (žádné URL z administrace/DB).
+- HTTPS + povolení hostitelé GitHubu; přesměrování na CDN bez autorizační hlavičky.
+- SHA-256 (`hash_equals`) + kontrola struktury ZIPu před instalací; limit 20 MB.
+- `install_plugins` / `update_plugins` / `activate_plugins` + nonce; respektuje `DISALLOW_FILE_MODS`.
+- Volitelně `BOMBORA_GITHUB_TOKEN` (wp-config) – jen pro privátní repa nebo vyšší limit API.

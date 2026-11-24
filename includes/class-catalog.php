@@ -66,6 +66,15 @@ final class Catalog {
 				'settings' => '',
 				'icon'     => 'editor-insertmore',
 			),
+			'bombora-infinite-scroll'  => array(
+				'name'     => 'Bombora Infinite Scroll',
+				'desc'     => self::t( 'Automatic loading of more products in shop listings with a counter, progress bar and position restore.' ),
+				'file'     => 'bombora-infinite-scroll/bombora-infinite-scroll.php',
+				'repo'     => 'bombora-tech/bombora-infinite-scroll',
+				'asset'    => 'bombora-infinite-scroll.zip',
+				'settings' => 'admin.php?page=bombora-infinite-scroll',
+				'icon'     => 'update',
+			),
 		);
 	}
 

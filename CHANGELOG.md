@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.1] - 2026-11-24
+
+### Přidáno
+- Modul **Bombora Infinite Scroll** (repo `bombora-infinite-scroll`): automatické donačítání produktů ve výpisech, nastavení v *Bombora → Infinite Scroll*.
+
 ## [1.1.0] - 2026-11-23
 
 ### Přidáno

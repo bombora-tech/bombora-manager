@@ -40,6 +40,9 @@ final class Bundle_Variants {
 	/** @var array<int,int[]> Cache v rámci požadavku. */
 	private static array $memo = array();
 
+	/** Aktuální položka smyčky „Varianty balení“ (podmínky Bricks nemusí dostat správný $post). */
+	private static int $loop_item = 0;
+
 	public static function init(): void {
 		// Bricks: vlastní typ query loopu.
 		add_filter( 'bricks/setup/control_options', array( __CLASS__, 'query_type' ) );
@@ -108,6 +111,7 @@ final class Bundle_Variants {
 			return $loop_object;
 		}
 		if ( $loop_object instanceof \WP_Post ) {
+			self::$loop_item = (int) $loop_object->ID;
 			global $post;
 			$post = $loop_object; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			setup_postdata( $post );
@@ -120,6 +124,7 @@ final class Bundle_Variants {
 	 */
 	public static function after_loop( $query_obj ): void {
 		if ( is_object( $query_obj ) && self::QUERY_TYPE === ( $query_obj->object_type ?? '' ) ) {
+			self::$loop_item = 0;
 			wp_reset_postdata();
 		}
 	}
@@ -175,11 +180,17 @@ final class Bundle_Variants {
 
 	private static function value( string $name, $post, string $context ): string {
 		if ( 'bombora_bundle_variants_count' === $name ) {
-			$id = self::current_product_id();
-			return $id ? (string) count( self::ids( $id ) ) : '0';
+			// Prázdné při 0 – Bricks podmínka „není prázdné“ (hodnotu „0“ Bricks v podmínkách bere jako nevyplněnou).
+			$id    = self::current_product_id();
+			$count = $id ? count( self::ids( $id ) ) : 0;
+			return $count > 0 ? (string) $count : '';
 		}
 
-		$post_id = $post instanceof \WP_Post ? $post->ID : ( is_numeric( $post ) ? (int) $post : get_the_ID() );
+		if ( self::$loop_item ) {
+			$post_id = self::$loop_item;
+		} else {
+			$post_id = $post instanceof \WP_Post ? $post->ID : ( is_numeric( $post ) ? (int) $post : get_the_ID() );
+		}
 		$product = $post_id ? wc_get_product( $post_id ) : null;
 		if ( ! $product ) {
 			return '';

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1] - 2026-11-25
+
+### Opraveno
+- Varianty balení: tagy `{bombora_bundle_*}` uvnitř smyčky (včetně podmínek zobrazení) vždy čtou položku smyčky – prázdný štítek „Ušetríte“ u jednotlivého kusu se už nezobrazí.
+- `{bombora_bundle_variants_count}` vrací při 0 prázdný řetězec – podmínka sekce „není prázdné“ (hodnotu „0“ Bricks v podmínkách ignoruje).
+
 ## [1.2.0] - 2026-11-25
 
 ### Přidáno

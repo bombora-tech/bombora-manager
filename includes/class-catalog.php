@@ -84,6 +84,16 @@ final class Catalog {
 				'settings' => 'admin.php?page=bombora-mergado-wpml',
 				'icon'     => 'rss',
 			),
+			'bombora-b2b-agent'        => array(
+				'name'     => 'Bombora B2B Agent',
+				'desc'     => self::t( 'Wholesale (B2B): prices for approved partners only, company registration with ARES/VIES, CZ-only delivery rules, invoice payment with Eurofaktura proforma, multiple delivery addresses (branches) at checkout.' ),
+				'file'     => 'bombora-b2b-agent/bombora-b2b-agent.php',
+				'legacy'   => 'zg-b2b/zg-b2b.php',
+				'repo'     => 'bombora-tech/bombora-b2b-agent',
+				'asset'    => 'bombora-b2b-agent.zip',
+				'settings' => 'admin.php?page=zg-b2b',
+				'icon'     => 'businessperson',
+			),
 		);
 	}
 

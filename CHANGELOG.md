@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1] - 2026-11-25
+
+### Přidáno
+- Modul **Bombora B2B Agent** (repo `bombora-b2b-agent`, složka `bombora-b2b-agent`): velkoobchod vo.zgruzie.cz – ceny pro schválené partnery, registrace ARES/VIES, doručení lihovin a piva jen v ČR, platba na fakturu (proforma z Eurofaktury), více doručovacích adres (pobočky). Nastavení v *WooCommerce → Bombora B2B*.
+- Převod do nové složky: `zg-b2b` → `bombora-b2b-agent` (data, nastavení a B2B účty zůstanou).
+
 ## [1.3.0] - 2026-11-25
 
 ### Přidáno

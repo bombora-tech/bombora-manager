@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.0] - 2026-11-25
+
+### Přidáno
+- **Varianty balení pro Bricks** (součást Manageru, bez ACF a bez snippetů):
+  - Query loop typ **„Bombora: Varianty balení“** – zdroj jsou nativní WooCommerce **Up-selly** produktu; když jsou prázdné, automaticky se najde rodina balení (jednotlivý kus + WPC bundly obsahující jen tento produkt). Řazení: 1 ks → 3× → 6× → 20×.
+  - Dynamické tagy (skupina „Bombora“): `{bombora_bundle_saving}` (úspora balíčku), `{bombora_bundle_saving_pct}`, `{bombora_bundle_qty}`, `{bombora_bundle_unit_price}`, `{bombora_bundle_variants_count}` (pro podmínku zobrazení sekce).
+  - WPML: ID se překládají na aktuální jazyk, automatická rodina se počítá ve výchozím jazyce; na frontendu žádné pevné texty (popisky jsou v Bricks).
+  - Nápověda u pole Up-selly v editaci produktu.
+
 ## [1.1.1] - 2026-11-24
 
 ### Přidáno

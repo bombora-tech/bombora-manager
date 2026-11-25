@@ -9,6 +9,11 @@ Správa všech pluginů Bombora group s.r.o. na jednom místě (podobně jako WP
 | Smart Search | `zg-smart-search` | `bombora-tech/bombora-smart-search` |
 | Wine Nutrition | `wine-nutrition-manager` | `bombora-tech/bombora-wine-nutrition` |
 
+## Varianty balení (Bricks)
+- Bricks → Query loop → typ **Bombora: Varianty balení**. Zdroj: Up-selly produktu, jinak automaticky bundly téhož produktu (3×, 6× …).
+- Tagy: `{bombora_bundle_saving}`, `{bombora_bundle_saving_pct}`, `{bombora_bundle_qty}`, `{bombora_bundle_unit_price}`, `{bombora_bundle_variants_count}`.
+- Vypnutí automatiky: filtr `bombora_bundle_variants_auto` → `false`.
+
 ## Jak to funguje
 - **Bombora → Moduly**: instalace, aktivace, nastavení a aktualizace modulů.
 - Aktualizace se objeví i v běžném *Nástěnka → Aktualizace* (kontrola každých 6 h, ručně tlačítkem „Zkontrolovat aktualizace“).

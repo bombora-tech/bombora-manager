@@ -75,6 +75,15 @@ final class Catalog {
 				'settings' => 'admin.php?page=bombora-infinite-scroll',
 				'icon'     => 'update',
 			),
+			'bombora-mergado-wpml'     => array(
+				'name'     => 'Bombora Mergado WPML',
+				'desc'     => self::t( 'Separate Mergado product feed for every WPML language, with cron and feed URLs per language.' ),
+				'file'     => 'bombora-mergado-wpml/bombora-mergado-wpml.php',
+				'repo'     => 'bombora-tech/mergado-wpml-support',
+				'asset'    => 'bombora-mergado-wpml.zip',
+				'settings' => 'admin.php?page=bombora-mergado-wpml',
+				'icon'     => 'rss',
+			),
 		);
 	}
 

@@ -8,6 +8,7 @@ Správa všech pluginů Bombora group s.r.o. na jednom místě (podobně jako WP
 | Pop-up košík | `bombora-cart-popup` | `bombora-tech/bombora-cart-popup` |
 | Smart Search | `zg-smart-search` | `bombora-tech/bombora-smart-search` |
 | Wine Nutrition | `wine-nutrition-manager` | `bombora-tech/bombora-wine-nutrition` |
+| Mergado WPML | `bombora-mergado-wpml` | `bombora-tech/mergado-wpml-support` |
 
 ## Varianty balení (Bricks)
 - Bricks → Query loop → typ **Bombora: Varianty balení**. Zdroj: Up-selly produktu, jinak automaticky bundly téhož produktu (3×, 6× …).

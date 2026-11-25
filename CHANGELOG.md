@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.0] - 2026-11-25
+
+### Přidáno
+- Modul **Bombora Mergado WPML** (repo `mergado-wpml-support`, složka `bombora-mergado-wpml`): samostatný Mergado produktový feed pro každý jazyk WPML, nastavení v *Bombora → Mergado feedy*.
+
 ## [1.2.1] - 2026-11-25
 
 ### Opraveno

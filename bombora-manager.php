@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       Bombora Manager
  * Plugin URI:        https://github.com/bombora-tech/bombora-manager
- * Description:       Správa všech pluginů Bombora na jednom místě: přehled modulů, instalace, aktivace a bezpečné automatické aktualizace z GitHubu (ověřené SHA-256). Obsahuje Varianty balení pro Bricks.
- * Version:           1.3.1
+ * Description:       Správa všech pluginů Bombora na jednom místě: přehled modulů, instalace, aktivace a bezpečné automatické aktualizace z GitHubu (ověřené SHA-256). Obsahuje Varianty balení pro Bricks a Číslování objednávek.
+ * Version:           1.4.0
  * Requires at least: 6.5
  * Requires PHP:      8.0
  * Author:            Bombora group s.r.o.
@@ -23,7 +23,7 @@ if ( defined( 'BOMBORA_MANAGER_VERSION' ) ) {
 	return;
 }
 
-define( 'BOMBORA_MANAGER_VERSION', '1.3.1' );
+define( 'BOMBORA_MANAGER_VERSION', '1.4.0' );
 define( 'BOMBORA_MANAGER_FILE', __FILE__ );
 define( 'BOMBORA_MANAGER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BOMBORA_MANAGER_URL', plugin_dir_url( __FILE__ ) );
@@ -36,6 +36,7 @@ require_once BOMBORA_MANAGER_DIR . 'includes/class-installer.php';
 require_once BOMBORA_MANAGER_DIR . 'includes/class-migrator.php';
 require_once BOMBORA_MANAGER_DIR . 'includes/class-admin.php';
 require_once BOMBORA_MANAGER_DIR . 'includes/class-bundle-variants.php';
+require_once BOMBORA_MANAGER_DIR . 'includes/class-order-numbers.php';
 
 add_action(
 	'init',
@@ -51,6 +52,7 @@ add_action(
 	static function () {
 		if ( class_exists( 'WooCommerce' ) ) {
 			Bombora\Manager\Bundle_Variants::init();
+			Bombora\Manager\Order_Numbers::init(); // Číslování objednávek (Bombora → Číslování objednávek)
 		}
 	}
 );

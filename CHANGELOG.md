@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.0] - 2026-11-27
+
+### Přidáno
+- Vestavěný modul **Číslování objednávek** (*Bombora → Číslování objednávek*, karta i na stránce Moduly; výchozí vypnuto):
+  - Formát se zástupnými znaky `{RR}` / `{RRRR}` (rok) a `{N}` (pořadí, počet číslic nastavitelný), doporučeno `{RR}` + číslice e-shopu + `{N}` (např. VO `{RR}9{N}` → 26900001).
+  - Číslo se přidělí jednou při vytvoření objednávky (klasická i bloková pokladna, admin, REST, objednávky vytvořené pluginy); koncepty číslo nespotřebují. Pořadí se zvyšuje atomicky v databázi (bez duplicit při souběžných objednávkách), existující číslo se přeskočí.
+  - Objednávky vytvořené před zapnutím si nechají své číslo (ID), i když se později upraví. Po vypnutí se zobrazuje opět ID, přidělená čísla zůstávají.
+  - Volitelně pořadí každý rok od 1, ruční nastavení dalšího pořadového čísla, náhled příštího čísla.
+  - Upozornění: nečíselný formát nebo víc než 10 číslic (nepoužitelné jako variabilní symbol), možný překryv se staršími ID, jiný aktivní plugin pro číslování.
+  - Hledání objednávek v administraci podle nového čísla (HPOS i starší úložiště).
+
 ## [1.3.1] - 2026-11-25
 
 ### Přidáno

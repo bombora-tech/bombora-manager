@@ -36,5 +36,11 @@ return array(
 		'You are not allowed to install plugins.' => 'Nemáte oprávnění instalovat pluginy.',
 		'You are not allowed to update plugins.' => 'Nemáte oprávnění aktualizovat pluginy.',
 		'not released yet' => 'zatím nevydáno',
-	),
+			'Order numbers' => 'Číslování objednávek',
+		'The number contains non-digit characters – it cannot be used as a variable symbol (bank transfer, QR payment).' => 'Číslo obsahuje jiné znaky než číslice – nejde použít jako variabilní symbol (převod, QR platba).',
+		'The number has more than 10 digits – too long for a variable symbol.' => 'Číslo má víc než 10 číslic – pro variabilní symbol je příliš dlouhé.',
+		'Numbers may overlap with older orders, which keep their ID as the number (highest ID: %s). Use a higher range, e.g. add a digit.' => 'Čísla se mohou krýt se staršími objednávkami, které si nechávají ID jako číslo (nejvyšší ID: %s). Použijte vyšší rozsah, např. přidejte číslici.',
+		'Another order numbering plugin is active – deactivate it to avoid conflicts.' => 'Je aktivní jiný plugin pro číslování objednávek – deaktivujte ho, ať se navzájem nepřepisují.',
+		'Set up' => 'Nastavit',
+),
 );

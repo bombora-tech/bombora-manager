@@ -26,3 +26,6 @@
 .bombora .bombora-btn-update:hover{background:#558204;border-color:#558204;color:#fff}
 .bombora-foot{margin-top:20px;color:#646970}
 .bombora-card__note{margin:0;padding:8px 10px;background:#fcf9e8;border-left:3px solid #dba617;font-size:12px;color:#50575e}.bombora-err{color:#b32d2e}
+.bombora-onum{display:block;max-width:900px}
+.bombora-onum .form-table th{width:220px;padding-left:0}
+.bombora-onum__preview{display:inline-block;padding:6px 12px;font-size:18px;font-weight:600;background:#f2f7e9;border-radius:8px;color:#3f6a02}

@@ -31,7 +31,7 @@ final class Admin {
 	 * @param string $hook Aktuální stránka.
 	 */
 	public static function assets( $hook ): void {
-		if ( 'toplevel_page_' . self::PAGE !== $hook ) {
+		if ( 'toplevel_page_' . self::PAGE !== $hook && 'bombora_page_' . Order_Numbers::PAGE !== $hook ) {
 			return;
 		}
 		$file = 'assets/admin.css';
@@ -103,6 +103,9 @@ final class Admin {
 				<?php
 				foreach ( Catalog::all() as $slug => $m ) {
 					self::card( $slug, $m, $can_mods );
+				}
+				if ( class_exists( 'WooCommerce' ) ) {
+					Order_Numbers::module_card(); // vestavěný modul
 				}
 				?>
 			</div>

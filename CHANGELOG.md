@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.1] - 2026-11-27
+
+### Opraveno
+- Číslování objednávek: doplněny chybějící české překlady stránky nastavení.
+
 ## [1.4.0] - 2026-11-27
 
 ### Přidáno

@@ -10,6 +10,7 @@ Správa všech pluginů Bombora group s.r.o. na jednom místě (podobně jako WP
 | Wine Nutrition | `wine-nutrition-manager` | `bombora-tech/bombora-wine-nutrition` |
 | Mergado WPML | `bombora-mergado-wpml` | `bombora-tech/mergado-wpml-support` |
 | B2B Agent | `bombora-b2b-agent` (dříve `zg-b2b`) | `bombora-tech/bombora-b2b-agent` |
+| PayPal via Stripe | `bombora-stripe-paypal` | `bombora-tech/stripe-paypal-support` |
 
 ## Varianty balení (Bricks)
 - Bricks → Query loop → typ **Bombora: Varianty balení**. Zdroj: Up-selly produktu, jinak automaticky bundly téhož produktu (3×, 6× …).

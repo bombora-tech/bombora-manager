@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.2] - 2026-11-28
+
+### Přidáno
+- Modul **Bombora PayPal via Stripe** (repo `stripe-paypal-support`, složka `bombora-stripe-paypal`): PayPal v pokladně zpracovaný přes Stripe, automatický webhook, refundace ze Stripe se zapisují do objednávek, spor → „Čeká na vyřízení“. Nastavení v *WooCommerce → Platby → PayPal (via Stripe)*.
+
 ## [1.4.1] - 2026-11-27
 
 ### Opraveno

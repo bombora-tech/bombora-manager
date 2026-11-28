@@ -94,6 +94,15 @@ final class Catalog {
 				'settings' => 'admin.php?page=zg-b2b',
 				'icon'     => 'businessperson',
 			),
+			'bombora-stripe-paypal'    => array(
+				'name'     => 'Bombora PayPal via Stripe',
+				'desc'     => self::t( 'PayPal at checkout processed by Stripe (no direct PayPal integration): automatic Stripe webhook, refunds made in Stripe recorded in orders, disputes put the order on hold.' ),
+				'file'     => 'bombora-stripe-paypal/bombora-stripe-paypal.php',
+				'repo'     => 'bombora-tech/stripe-paypal-support',
+				'asset'    => 'bombora-stripe-paypal.zip',
+				'settings' => 'admin.php?page=wc-settings&tab=checkout&section=bombora_stripe_paypal',
+				'icon'     => 'money-alt',
+			),
 		);
 	}
 
